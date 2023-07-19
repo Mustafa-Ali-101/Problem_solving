@@ -1,2 +1,2 @@
 # Problem_solving
-all Problem Solving scripts and versions are found here in the C programming language
+ALL problems are solved here BY me USING the C programming language AND more!!
