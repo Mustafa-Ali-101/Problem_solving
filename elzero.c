@@ -5,12 +5,9 @@
 #include <string.h>
 #include <ctype.h>
 
-int compare_ints_desc(const void* a, const void* b);
-int sum_of_difference(int a[], int length);
-int messi_goals(int a, int b, int c);
-char* get_planet_name(int n);
-
-
+int sum_of_arrays(int a[], int b[],int alength, int blength,int aindex, int bindex);
+void count_sheep(int number, int asc);
+bool does_match(char a[], char b[], int aindex, int bindex);
 /* STARTING OF MAIN FUNCTION */
 int main(void) {
     /* ALL VARIABLES */
@@ -21,18 +18,18 @@ int main(void) {
 
 
     /* Test For Boolean */
-    bool bool_var = 0;
+    bool bool_var = does_match("ala", "ala", 0, 0);
     if(bool_var) {
-        printf("THE BOOLEAN VALUE IS TRUE\n");
+        printf("THE BOOLEAN VALUE IS: TRUE\n");
     } else{
-        printf("THE BOOLEAN VALUE IS FALSE\n");
+        printf("THE BOOLEAN VALUE IS: FALSE\n");
     }
 
     
 
 
     /* Test For Integer */
-    int int_var = messi_goals(5, 4, 6);
+    int int_var = sum_of_arrays(int_array, int_array, 3, 3, 0, 0);
     printf("RETURN TYPE INTEGER: %d\n", int_var);
 
 
@@ -52,48 +49,43 @@ int main(void) {
 
 
     /* Test For Char Array */
-    char* str_var = get_planet_name(5);
-    printf("RETURN TYPE STRING: %s\n", str_var);
+    char* str_var;
+    //printf("RETURN TYPE STRING: %s\n", str_var);
+    count_sheep(3, 1);
 }
 
 
-int sum_of_difference(int a[], int length) {
-    int sorted[length];
-    int i;
-    int result = 0;
-    if (length <= 1) return 0;
-    /* Copy the array in sorted */
-    for (i = 0; i < length; i++) {
-        sorted[i] = a[i];
+int sum_of_arrays(int a[], int b[],int alength, int blength,int aindex, int bindex) {
+    if (alength == 0){
+        if (blength == 0) {
+            return 0;
+        } else {
+           return  b[bindex] + sum_of_arrays(a, b, 0, blength - 1, 0, bindex + 1);
+        }
+    } else if (blength == 0) {
+        return a[aindex] + sum_of_arrays(a, b, alength - 1, 0, aindex + 1, 0);
+    }else {
+        return (a[aindex] +b[bindex] + sum_of_arrays(a, b, alength - 1, blength - 1, aindex + 1, bindex + 1));
     }
-    /* sort descending */
-    qsort(sorted, length, sizeof(int), compare_ints_desc);
-    
-    /* final loop for differences */
-    for (i = 0; i < (length - 1); i++) {
-        result += sorted[i] - sorted[i + 1];
+}
+
+void count_sheep(int number, int asc) {
+    if (asc <= number) {
+        printf("%d sheep...", asc);
+        count_sheep(number, asc + 1);
     }
-    return result;
 }
 
-
-int compare_ints_desc(const void* a, const void* b) {
-    // Cast the pointers to int*
-    int arg1 = *(const int*)a;
-    int arg2 = *(const int*)b;
-
-    // Compare the integers and return the result
-    if (arg1 < arg2) return 1; // Return positive if the first element is less than the second
-    if (arg1 > arg2) return -1; // Return negative if the first element is greater than the second
-    return 0;
-}
-
-int messi_goals(int a, int b, int c) {
-    return a + b + c;
-}
-
-char* get_planet_name(int n) {
-    char* ps[] = {"Mercury", "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto"};
-
-    return ps[n - 1];
+bool does_match(char a[], char b[], int aindex, int bindex) {
+    if (a[aindex] == '\0') {
+        if (b[bindex] == '\0') {
+            return (a[aindex - 1] == b[bindex - 1]);
+        } else {
+            return (1 && does_match(a, b, aindex, bindex - 1));
+        }
+    } else if (b[bindex] == '\0') {
+        return (1 && does_match(a, b, aindex - 1, bindex));
+    } else {
+        return ( 1 && does_match(a, b, aindex - 1, bindex - 1));
+    }
 }
