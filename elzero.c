@@ -5,9 +5,8 @@
 #include <string.h>
 #include <ctype.h>
 
-int* multi(int n, int a[]);
-int do_i_get_bonus(int salary, bool bonus);
-int opposite(int number);
+int* count_by_x(int x, int n);
+char* dogs(int number);
 
 /* STARTING OF MAIN FUNCTION */
 int main(void) {
@@ -30,14 +29,14 @@ int main(void) {
 
 
     /* Test For Integer */
-    int int_var = do_i_get_bonus(3, 0);
+    int int_var = 2;
     printf("RETURN TYPE INTEGER: %d\n", int_var);
 
 
 
     /* Test For Integer Array */
-    int* arr_var = multi(6, int_array);
-    for (int i = 0; i < 10; i++) {
+    int* arr_var = count_by_x(4, 4);
+    for (int i = 0; i < 4; i++) {
         printf("THE NUMBER IN %d IS: %d\n", i, *(arr_var + i));
     }
 
@@ -50,23 +49,24 @@ int main(void) {
 
 
     /* Test For Char Array */
-    char* str_var;
-    //printf("RETURN TYPE STRING: %s\n", str_var);
+    char* str_var = dogs(101);
+    printf("RETURN TYPE STRING: %s\n", str_var);
 }
 
-int* multi(int n, int a[]) {
+int* count_by_x(int x, int n) {
     int i;
-    for (i = 1; i <= 10; i++) {
-        a[i - 1] = i * n;
+    int re = 0;
+    int* pointer = malloc(n * sizeof(int));
+    for (i = 0; i < n; i++) {
+        re += x;
+        pointer[i] = re; 
     }
-    return a;
+    return pointer;
 }
 
-int do_i_get_bonus(int salary, bool bonus) {
-    return bonus? salary * 10 : salary; 
+char* dogs(int number) {
+    return number <= 10 ? "Hardly any"
+            : number <= 50 ? "More than a handful"
+            : number == 101 ? "101 DALMATIONS"
+            : "Woah that's a lot of dogs";
 }
-
-int opposite(int number) {
-    return number * -1;
-}
-
