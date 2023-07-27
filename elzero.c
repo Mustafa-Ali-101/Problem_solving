@@ -5,8 +5,8 @@
 #include <string.h>
 #include <ctype.h>
 
-int* count_by_x(int x, int n);
-char* dogs(int number);
+char* two_sort(char* a[], int length);
+int cmpfunc(const void *a, const void *b);
 
 /* STARTING OF MAIN FUNCTION */
 int main(void) {
@@ -14,8 +14,10 @@ int main(void) {
     char char_array[] = "mustafa nedeer";
     int int_array[10];
     int lenght = 3;           // integer array lenght
+    char* string_arr[] = {"always", "wanna", "do", "best"};
+    
 
-
+    two_sort(string_arr, 4);
 
     /* Test For Boolean */
     bool bool_var = 0;
@@ -35,7 +37,7 @@ int main(void) {
 
 
     /* Test For Integer Array */
-    int* arr_var = count_by_x(4, 4);
+    int* arr_var = int_array;
     for (int i = 0; i < 4; i++) {
         printf("THE NUMBER IN %d IS: %d\n", i, *(arr_var + i));
     }
@@ -49,24 +51,31 @@ int main(void) {
 
 
     /* Test For Char Array */
-    char* str_var = dogs(101);
+    char* str_var = two_sort(string_arr, 4);
     printf("RETURN TYPE STRING: %s\n", str_var);
 }
 
-int* count_by_x(int x, int n) {
-    int i;
-    int re = 0;
-    int* pointer = malloc(n * sizeof(int));
-    for (i = 0; i < n; i++) {
-        re += x;
-        pointer[i] = re; 
+
+char* two_sort(char* a[], int length) {
+    char arr[length];
+    int i, j;
+    for (i = 0; i < length; i++) {
+        arr[i] = a[i][0];
+        printf("%c\n", arr[i]);
     }
-    return pointer;
+    char* result = malloc((length * 4) * sizeof(char) + 1);
+    qsort(arr, length, sizeof(char), cmpfunc);
+    for (i = 0, j = 0; i < length * 4; i += 4, j++) {
+        result[i] = arr[j];
+        result[i + 1] = '*';
+        result[i + 2] = '*';
+        result[i + 3] = '*';
+    }
+    result[length * 4] = '\0';
+    return result;
 }
 
-char* dogs(int number) {
-    return number <= 10 ? "Hardly any"
-            : number <= 50 ? "More than a handful"
-            : number == 101 ? "101 DALMATIONS"
-            : "Woah that's a lot of dogs";
+// A comparison function that uses strcmp to compare two chars as strings
+int cmpfunc(const void *a, const void *b) {
+  return strcmp((const char *)a, (const char *)b);
 }
