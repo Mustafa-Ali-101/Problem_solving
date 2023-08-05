@@ -6,15 +6,15 @@
 #include <ctype.h>
 
 int compare(const void *a, const void *b);
-int combat(int health, int damage);
-int find_smallest(int a[], int length);
-int sum(int a[], int length);
+int sum_of_positive(int* a, int length);
+int volume(int l, int w, int h);
+int average(int arr[], int len);
 
 /* STARTING OF MAIN FUNCTION */
 int main(void) {
     /* ALL VARIABLES */
     char char_array[] = "mustafa nedeer";
-    int int_array[] = {4, 5, 7, 3, 9, 2};
+    int int_array[] = {1, 5, 2, 3, 4};
     int lenght = 3;           // integer array lenght
     char* string_arr[] = {"always", "wanna", "do", "best"};
     
@@ -30,7 +30,7 @@ int main(void) {
 
 
     /* Test For Integer */
-    int int_var = sum(int_array, 6);
+    int int_var = average(int_array, 5);
     printf("RETURN TYPE INTEGER: %d\n", int_var);
 
 
@@ -45,7 +45,7 @@ int main(void) {
 
     /* Test For Char */
     char char_var = 'a';
-    printf("RETURN TYPE CHARCATER IS: %d\n", char_var);
+    printf("RETURN TYPE CHARCATER IS: %c\n", char_var);
 
 
 
@@ -53,23 +53,6 @@ int main(void) {
     char* str_var;
     //printf("RETURN TYPE STRING: %s\n", str_var);
 }
-
-int sum(int a[], int length) {
-    int arr[length];
-    int i;
-    int result = 0;
-    for (i = 0; i < length; i++) {
-        arr[i] = a[i];
-    }
-    int n = sizeof(arr) / sizeof(arr[0]);
-    qsort(arr, n, sizeof(int), compare);
-
-    for (int i = 1; i < (length - 1); i++) {
-        result += arr[i];
-    }
-    return result;
-}
-
 
 int compare(const void *a, const void *b)
 {
@@ -83,15 +66,30 @@ int compare(const void *a, const void *b)
     return x - y;
 }
 
-int combat(int health, int damage) {
-    return health > damage ? health - damage : 0;
+int sum_of_positive(int* a, int length) {
+    if (length == 0) {
+        return 0;
+    } else {
+        if (a[0] < 0) {
+            return sum_of_positive(a + 1, length - 1);
+        } else {
+            return a[0] + sum_of_positive(a + 1, length - 1);
+        }  
+    }
 }
 
-int find_smallest(int a[], int length) {
-    int so_far = a[0];
+int volume(int l, int w, int h) {
+    return l * w * h;
+}
+
+int average(int arr[], int len) {   
+    int result = 0;
+    int count = 0;
     int i;
-    for (i = 0; i < length; i++) {
-        if (a[i] < so_far) so_far = a[i];
+    for (i = 0; i < len; i++) {
+        result += arr[i];
+        count++;
     }
-    return so_far;
+    
+    return result / count;
 }
