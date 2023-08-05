@@ -6,9 +6,9 @@
 #include <ctype.h>
 
 int compare(const void *a, const void *b);
-int sum_of_positive(int* a, int length);
-int volume(int l, int w, int h);
-int average(int arr[], int len);
+int* fakebin(int a[], int len);
+int sakura_fall(int speed);
+char* replace(char* arr);
 
 /* STARTING OF MAIN FUNCTION */
 int main(void) {
@@ -30,13 +30,13 @@ int main(void) {
 
 
     /* Test For Integer */
-    int int_var = average(int_array, 5);
+    int int_var = sakura_fall(5);
     printf("RETURN TYPE INTEGER: %d\n", int_var);
 
 
 
     /* Test For Integer Array */
-    int* arr_var = int_array;
+    int* arr_var = fakebin(int_array, 5);
     for (int i = 0; i < 4; i++) {
         printf("THE NUMBER IN %d IS: %d\n", i, *(arr_var + i));
     }
@@ -50,8 +50,8 @@ int main(void) {
 
 
     /* Test For Char Array */
-    char* str_var;
-    //printf("RETURN TYPE STRING: %s\n", str_var);
+    char* str_var = replace(char_array);
+    printf("RETURN TYPE STRING: %s\n", str_var);
 }
 
 int compare(const void *a, const void *b)
@@ -66,30 +66,35 @@ int compare(const void *a, const void *b)
     return x - y;
 }
 
-int sum_of_positive(int* a, int length) {
-    if (length == 0) {
+int* fakebin(int a[], int len) {
+    int* p = malloc(len * sizeof(int));
+    for (int i = 0; i < len; i++) {
+        if (a[i] < 5) {
+            p[i] = 0;
+        } else {
+            p[i] = 1;
+        }
+    }
+    return p;
+}
+
+int sakura_fall(int speed) {
+    if (speed <= 0) {
         return 0;
     } else {
-        if (a[0] < 0) {
-            return sum_of_positive(a + 1, length - 1);
-        } else {
-            return a[0] + sum_of_positive(a + 1, length - 1);
-        }  
+        return 400 / speed;
     }
 }
 
-int volume(int l, int w, int h) {
-    return l * w * h;
-}
-
-int average(int arr[], int len) {   
-    int result = 0;
-    int count = 0;
-    int i;
-    for (i = 0; i < len; i++) {
-        result += arr[i];
-        count++;
+char* replace(char* arr) {
+    char s[] = {'a', 'e', 'i', 'o', 'u'};
+    for (int i = 0; arr[i] != '\0'; i++) {
+        for (int j = 0; j < 5; j++) {
+            if (arr[i] == s[j]) {
+                arr[i] = '!';
+                break;
+            }
+        }
     }
-    
-    return result / count;
+    return arr;
 }
