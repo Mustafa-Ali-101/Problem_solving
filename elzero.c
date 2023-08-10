@@ -6,9 +6,9 @@
 #include <ctype.h>
 
 int compare(const void *a, const void *b);
-int* fakebin(int a[], int len);
-int sakura_fall(int speed);
-char* replace(char* arr);
+int* powers_of_two(int n);
+int summation(int number);
+char* update_light(char* s);
 
 /* STARTING OF MAIN FUNCTION */
 int main(void) {
@@ -30,13 +30,13 @@ int main(void) {
 
 
     /* Test For Integer */
-    int int_var = sakura_fall(5);
+    int int_var = summation(9);
     printf("RETURN TYPE INTEGER: %d\n", int_var);
 
 
 
     /* Test For Integer Array */
-    int* arr_var = fakebin(int_array, 5);
+    int* arr_var = powers_of_two(3);
     for (int i = 0; i < 4; i++) {
         printf("THE NUMBER IN %d IS: %d\n", i, *(arr_var + i));
     }
@@ -50,7 +50,7 @@ int main(void) {
 
 
     /* Test For Char Array */
-    char* str_var = replace(char_array);
+    char* str_var = update_light("red");
     printf("RETURN TYPE STRING: %s\n", str_var);
 }
 
@@ -66,35 +66,29 @@ int compare(const void *a, const void *b)
     return x - y;
 }
 
-int* fakebin(int a[], int len) {
-    int* p = malloc(len * sizeof(int));
-    for (int i = 0; i < len; i++) {
-        if (a[i] < 5) {
-            p[i] = 0;
-        } else {
-            p[i] = 1;
-        }
+int* powers_of_two(int n) {
+    int* p = malloc((n + 1) * sizeof(int));
+    int i;
+    for (i = 0; i <= n; i++) {
+        p[i] = pow(2, i);
     }
     return p;
 }
 
-int sakura_fall(int speed) {
-    if (speed <= 0) {
+int summation(int number) {
+    if (number == 0) {
         return 0;
     } else {
-        return 400 / speed;
+        return number + summation(number - 1);
     }
 }
 
-char* replace(char* arr) {
-    char s[] = {'a', 'e', 'i', 'o', 'u'};
-    for (int i = 0; arr[i] != '\0'; i++) {
-        for (int j = 0; j < 5; j++) {
-            if (arr[i] == s[j]) {
-                arr[i] = '!';
-                break;
-            }
-        }
+char* update_light(char* s) {
+    if (strcmp(s, "green") == 0) {
+        return "yellow";
+    } else if (strcmp(s, "yellow") == 0) {
+        return "red";
+    } else {
+        return "green";
     }
-    return arr;
 }
