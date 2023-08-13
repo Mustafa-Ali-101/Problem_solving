@@ -6,16 +6,16 @@
 #include <ctype.h>
 
 int compare(const void *a, const void *b);
-int* count_positives_sum_negatives(int a[], int length);
-int expressions_matter(int a, int b, int c);
-bool pythagorean_triple(int a, int b, int c);
+int sum_array(int* b, int numb);
+char* point(int a, int b);
+int seat_in_theater(int total_col, int total_row, int col, int row);
 
 /* STARTING OF MAIN FUNCTION */
 int main(void) {
     /* ALL VARIABLES */
     char char_array[] = "mustafa nedeer";
     char* str_array[] = {"body", "tails", "heads"};
-    int int_array[] = {1, 5, 2, 3, 4, 6, 7, 8, 9, 10, -11, -12, -13, -14, -15};
+    int int_array[] = {1, 5, 2, 3, 4, 6, 7, 8, 9, 10};
     int lenght = 3;           // integer array lenght
     char* string_arr[] = {"always", "wanna", "do", "best"};
     
@@ -31,13 +31,13 @@ int main(void) {
 
 
     /* Test For Integer */
-    int int_var = expressions_matter(2, 1, 3);
+    int int_var = seat_in_theater(16, 11, 5, 3);
     printf("RETURN TYPE INTEGER: %d\n", int_var);
 
 
 
     /* Test For Integer Array */
-    int* arr_var = count_positives_sum_negatives(int_array, 5);
+    int* arr_var = int_array;
     printf("RETURN TYPE ARRAY: [");
     for (int i = 0; i < 2; i++) {
         printf(" %d ", *(arr_var + i));
@@ -54,8 +54,8 @@ int main(void) {
 
 
     /* Test For Char Array */
-    char* str_var;
-    //printf("RETURN TYPE STRING: %s\n", str_var);
+    char* str_var = point(5, 3);
+    printf("RETURN TYPE STRING: %s\n", str_var);
 
     /* Test For String Array */
     char** str_arr;
@@ -76,52 +76,24 @@ int compare(const void *a, const void *b)
     return x - y;
 }
 
-int* count_positives_sum_negatives(int a[], int length) {
-    int i;
-    int count = 0;
-    int sum = 0;
-    int* p = malloc(2 * sizeof(int));
-    for (i = 0; i < length; i++) {
-        if (a[i] >= 0) {
-            count++;
-        } else {
-            sum += a[i];
-        }
-    }
-    p[0] = count;
-    p[1] = sum;
-    return p;
-}
-
-int expressions_matter(int a, int b, int c) {
-    int* p = malloc(5 * sizeof(int));
-    p[0] = (a + b) * c;
-    p[1] = (a + c) * b;
-    p[2] = (c + b) * a;
-    p[3] = a + b + c;
-    p[4] = a * b * c;
-
-    int max;
-    for (int i = 0; i < 5; i++) {
-        if (p[i] > max) max = p[i];
-    }
-    return max;
-}
-
-bool pythagorean_triple(int a, int b, int c) {
-    int max;
-    if (a > b){
-        if (a > c) {
-            max = a;
-        } else {
-            max = c;
-        }
+int sum_array(int* b, int numb) {
+    if (numb == 0) {
+        return 0;
     } else {
-        if (b > c) {
-            max = b;
-        } else {
-            max = c;
-        }
+        return b[0] + sum_array(b + 1, numb - 1);
     }
-    return (max * max) == (a * a) + (b * b) + (c * c) - (max * max);
+}
+
+char* point(int a, int b) {
+    if (a > b) {
+        return "Win";
+    } else if (b > a) {
+        return "Lose";
+    } else {
+        return "Draw";
+    }
+}
+
+int seat_in_theater(int total_col, int total_row, int col, int row) {
+    return (total_col - col + 1) * (total_row - row);
 }
