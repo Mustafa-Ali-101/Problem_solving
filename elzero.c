@@ -6,14 +6,14 @@
 #include <ctype.h>
 
 int compare(const void *a, const void *b);
-int rental_car_cost(int days);
-int* pipe_fix(int* arr, int length);
-int student_grade(int grade, int project);
+int square_rectangle(int length, int width);
+int* divisible_by(int * a, int num, int length);
+char** greet(char * a);
 
 /* STARTING OF MAIN FUNCTION */
 int main(void) {
     /* ALL VARIABLES */
-    char char_array[] = "mustafa nedeer";
+    char char_array[] = "Mustafa Nedeer";
     char* str_array[] = {"body", "tails", "heads"};
     int int_array[] = {1, 2, 3, 4, 9};
     int lenght = 3;           // integer array lenght
@@ -31,7 +31,7 @@ int main(void) {
 
 
     /* Test For Integer */
-    int int_var = student_grade(85, 5);
+    int int_var = square_rectangle(3, 3);
     printf("RETURN TYPE INTEGER: %d\n", int_var);
 
 
@@ -45,9 +45,9 @@ int main(void) {
 
 
     /* Test For Integer Array */
-    int* arr_var = pipe_fix(int_array, 5);
+    int* arr_var = divisible_by(int_array, 9, 5);
     printf("RETURN TYPE ARRAY: [");
-    for (int i = 0; i < 9; i++) {
+    for (int i = 0; i < 4; i++) {
         printf(" %d ", arr_var[i]);
     }
     printf("]\n");
@@ -66,10 +66,12 @@ int main(void) {
     //printf("RETURN TYPE STRING: %s\n", str_var);
 
     /* Test For String Array */
-    char** str_arr;
-    //for (int i = 0; i < 3; i++) {
-    //    printf("THE FIRST STRING IS: %s \n", str_arr[i]);
-    //}
+    char** str_arr = greet(char_array);
+    printf("THE STRING IS: ");
+    for (int i = 0; i < 3; i++) {
+        printf("%s", str_arr[i]);
+    }
+    printf("\n");
 }
 
 int compare(const void *a, const void *b)
@@ -84,32 +86,38 @@ int compare(const void *a, const void *b)
     return x - y;
 }
 
-int rental_car_cost(int days) {
-    int cost = days * 40;
-    if (days >= 7) {
-        return cost - 50;
-    } else if(days >= 3) {
-        return cost - 20;
+int square_rectangle(int length, int width) {
+    if (length == width) {
+        int area = length * width;
+        return area;
     } else {
-        return cost;
+        int perimeter = 2 * (length + width);
+        return perimeter;
     }
 }
 
-int* pipe_fix(int* a, int length) {
-    int start = a[0];
-    int end = a[length - 1];
-    int diff = end - start + 1;
-    int * p = malloc(diff * sizeof(int));
-    for (int i = 0; i < diff; i++) {
-        p[i] = start;
-        start++;
+int* divisible_by(int * a, int num, int length) {
+    int result_length = 0;
+    int i;
+    int index = 0;
+    for (i = 0; i < length; i++) {
+        if (num % a[i] == 0) result_length++;
+    }
+    int * p = malloc(result_length * sizeof(int));
+    for (i = 0; i < length; i++) {
+        if (num % a[i] == 0) {
+            p[index] = a[i];
+            index++;
+        }
     }
     return p;
 }
 
-int student_grade(int grade, int project) {
-    if (grade == 100 || project > 10) return 100;
-    if (grade > 75 && project >= 5) return 90;
-    if (grade > 50 && project >= 2) return 75;
-    return 0;
+char** greet(char * a) {
+    int i;
+    char* * g = malloc(3 * sizeof(char*));
+    g[0] = "Hello, ";
+    g[1] = a;
+    g[2] = " how are you doing today?";
+    return g;
 }
