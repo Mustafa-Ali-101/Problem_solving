@@ -6,16 +6,14 @@
 #include <ctype.h>
 
 int compare(const void *a, const void *b);
-int square_rectangle(int length, int width);
-int* divisible_by(int * a, int num, int length);
-char** greet(char * a);
+int* twoSum(int* nums, int numsSize, int target, int* returnSize);
 
 /* STARTING OF MAIN FUNCTION */
 int main(void) {
     /* ALL VARIABLES */
     char char_array[] = "Mustafa Nedeer";
     char* str_array[] = {"body", "tails", "heads"};
-    int int_array[] = {1, 2, 3, 4, 9};
+    int int_array[] = {3, 2, 4};
     int lenght = 3;           // integer array lenght
     char* string_arr[] = {"always", "wanna", "do", "best"};
     
@@ -31,7 +29,7 @@ int main(void) {
 
 
     /* Test For Integer */
-    int int_var = square_rectangle(3, 3);
+    int int_var = 0;
     printf("RETURN TYPE INTEGER: %d\n", int_var);
 
 
@@ -45,9 +43,9 @@ int main(void) {
 
 
     /* Test For Integer Array */
-    int* arr_var = divisible_by(int_array, 9, 5);
+    int* arr_var = twoSum(int_array, 3, 6, &int_var);
     printf("RETURN TYPE ARRAY: [");
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 2; i++) {
         printf(" %d ", arr_var[i]);
     }
     printf("]\n");
@@ -66,12 +64,12 @@ int main(void) {
     //printf("RETURN TYPE STRING: %s\n", str_var);
 
     /* Test For String Array */
-    char** str_arr = greet(char_array);
+    /*char** str_arr = char_array;
     printf("THE STRING IS: ");
     for (int i = 0; i < 3; i++) {
         printf("%s", str_arr[i]);
     }
-    printf("\n");
+    printf("\n");*/
 }
 
 int compare(const void *a, const void *b)
@@ -86,38 +84,33 @@ int compare(const void *a, const void *b)
     return x - y;
 }
 
-int square_rectangle(int length, int width) {
-    if (length == width) {
-        int area = length * width;
-        return area;
-    } else {
-        int perimeter = 2 * (length + width);
-        return perimeter;
-    }
-}
-
-int* divisible_by(int * a, int num, int length) {
-    int result_length = 0;
+int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
     int i;
-    int index = 0;
-    for (i = 0; i < length; i++) {
-        if (num % a[i] == 0) result_length++;
+    int max = 0;
+    int complement = 0;
+    int * p = malloc(2 * sizeof(int));
+    for (i = 0; i < numsSize; i++) {
+        if (nums[i] > max) max = nums[i];
     }
-    int * p = malloc(result_length * sizeof(int));
-    for (i = 0; i < length; i++) {
-        if (num % a[i] == 0) {
-            p[index] = a[i];
-            index++;
+    
+    int * hash_table = malloc(max * sizeof(int));
+    for (i = 0; i < max; i++) {
+        hash_table[i] = 0;
+    }
+    for (i = 0; i < numsSize; i++) {
+        hash_table[nums[i]] = 1;
+    }
+    for (i = 0; i < numsSize; i++) {
+        complement = target - nums[i];
+        if (hash_table[nums[i]] && hash_table[complement]) {
+            for (int j = 0; i < numsSize; i++) {
+                if (nums[j] == complement) {
+                    p[0] = i;
+                    p[1] = j;
+                    return p;
+                }
+            }
         }
     }
-    return p;
-}
 
-char** greet(char * a) {
-    int i;
-    char* * g = malloc(3 * sizeof(char*));
-    g[0] = "Hello, ";
-    g[1] = a;
-    g[2] = " how are you doing today?";
-    return g;
 }
