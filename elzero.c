@@ -7,6 +7,10 @@
 
 int compare(const void *a, const void *b);
 char * longestCommonPrefix(char ** strs, int strsSize);
+bool isValid(char * s, int first, int last);
+bool is_valid(char * s);
+
+
 /* STARTING OF MAIN FUNCTION */
 int main(void) {
     /* ALL VARIABLES */
@@ -17,7 +21,7 @@ int main(void) {
     char* string_arr[] = {"always", "wanna", "do", "best"};
     
     /* Test For Boolean */
-    bool bool_var = 1;
+    bool bool_var = is_valid("(([])){[{}]}");
     if(bool_var) {
         printf("THE BOOLEAN VALUE IS: TRUE\n");
     } else{
@@ -102,4 +106,48 @@ char * longestCommonPrefix(char ** strs, int strsSize) {
         commonpre[index] = c;
         index++;
     }
+}
+
+bool isValid(char * s, int first, int last) {
+    if (last - first == 1) {
+        return (s[last] - s[first] == 1 || s[last] - s[first] == 2);
+    }
+    bool found = 0;
+    int i;
+    for (i = first; i < last; i++) {
+        for (int j = i + 1; j <= last; j++) {
+            if (s[j] - s[i] == 1 || s[j] - s[i] == 2){
+                if (isValid(s, i + 1, j - 1)){
+                    i = j;
+                    found = true;
+                    break;
+                }
+            }
+        }
+        if (found) {
+            found = false;
+        } else {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool is_valid(char * s) { //  (([})){[{}]}
+    int index = 0;
+    int stack[20];
+    int i;
+    for (i = 0; s[i] != '\0'; i++) {
+        if (s[i] == '(' || s[i] == '{' || s[i] == '[') {
+            index++;
+            stack[index] = s[i];
+        } else {
+            if (s[i] - stack[index] == 1 || s[i] - stack[index] == 2) {
+                index--;
+            } else {
+                return false;
+            }
+        }
+    }
+    return index == 0 ? 1 : 0;
 }
