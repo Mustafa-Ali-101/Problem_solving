@@ -6,53 +6,91 @@
 #include <ctype.h>
 #include "helper.h"
 
+typedef struct list_node {
+    int value;
+    struct list_node * next;
+} node;
 
-char* reverseVowels(char* s);
+node* makeStack() {
+    node* result = NULL;
+    return result;
+}
 
+bool pushStack(node** head, int val) {
+    node* result = (node*) malloc(sizeof(node));
+    result->value = val;
+
+    result->next = (*head);
+
+    (*head) = result;
+
+    return true;
+}
+
+int popStack(node** head) {
+    int result = -1 ;
+    if (*head != NULL) {
+      result = (*head)->value;
+      (*head) = (*head)->next;
+    }
+    return result;
+}
+
+bool isEmptyStack(node* head) {
+  return head == NULL;
+}
+
+int calPoints(char** operations, int operationsSize);
 int main()
 {
-  char myString[] = {'n', 'e', 'd','e', 'a', 'r', '\0'};
 
-  char* reversed = reverseVowels(myString);
+  char* game[] = {"5","2","C","D","+"};
+
+  int number = calPoints(game, 5);
 
 
-  printf(reversed);
-  //printf("%d \n", ('a' == a));
+  printf("%d \n", number);
   return 0;
 }
 
+int calPoints(char** operations, int operationsSize) {
 
-char* reverseVowels(char* s) {
-  int start = 0;
-  int end = 0;
+  node* stack = makeStack();
+  int total = 0;
 
-  for(int i = 0; s[i] != '\0'; i++) {
-    end++;
-  }
+  for (int i = 0; i < operationsSize; i++) {
 
-  // make the array that will be modified
-  char* arr = malloc(sizeof(char) * (end + 1));
-  arr[end + 1] = '\0';
-  for (int i = 0; i <= end; i++) {
-    arr[i] = s[i];
-  }
+    if (strcmp(operations[i], "+") == 0) {
 
-  while(end > start) {
-    if (isVowel(s[start]) && isVowel(s[end])) {
-      arr[start] = s[end];
-      arr[end] = s[start];
-      start++;
-      end--;
-    } else if (isVowel(s[start])){
-      end--;
-    } else if (isVowel(s[end])){
-      start++;
+      int one = popStack(&stack);
+      int two = popStack(&stack);
+
+      total += one + two;
+
+      pushStack(&stack, two);
+      pushStack(&stack, one);
+      pushStack(&stack, one + two);
+
+    } else if (strcmp(operations[i], "D") == 0) {
+
+      int one = popStack(&stack);
+
+      total += one * 2;
+
+      pushStack(&stack, one);
+      pushStack(&stack, one * 2);
+
+    } else if (strcmp(operations[i], "C") == 0) {
+
+      total -= popStack(&stack);
+
     } else {
-      start++;
-      end--;
+
+      pushStack(&stack, atoi(operations[i]));
+      total += atoi(operations[i]);
+
     }
   }
 
-
-  return arr;    
+  return total;
 }
