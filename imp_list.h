@@ -6,7 +6,7 @@
 #include <ctype.h>
 
 typedef struct list_node {
-    int value;
+    int val;
     struct list_node * next;
 } node;
 
@@ -16,11 +16,11 @@ node * make_list(int * a, int l) {
     int i;
     node * temp = head;
     for (i = 0; i < l - 1; i++) {
-        temp->value = a[i];
+        temp->val = a[i];
         temp->next = malloc(sizeof(node));
         temp = temp->next;
     }
-    temp->value = a[i];
+    temp->val = a[i];
     temp->next = NULL;
     return head;
 }
@@ -36,7 +36,7 @@ node * but_first(node * head) {
 void print_list (node * head) {
     node * temp = head;
     while(temp != NULL) {
-        printf("%d ", temp->value);
+        printf("%d ", temp->val);
         temp = temp->next;
     }
 }
@@ -46,8 +46,8 @@ node* new_node(int v) {
     /* malloc a new node */
     node* n = malloc(sizeof(node));
 
-    /* set the value and next */
-    n->value = v;
+    /* set the val and next */
+    n->val = v;
     n->next = NULL;
 
     /* return the new node */
@@ -61,7 +61,7 @@ void push(node ** head, int new) {
     node * tmp = malloc(sizeof(node));
 
     /* put in the data  */
-    tmp->value = new;
+    tmp->val = new;
 
     /* Make next of new node as head */
     tmp->next = *head;
@@ -83,7 +83,7 @@ void insert_after(node* prev_node, int new) {
     node* tmp = malloc(sizeof(node));
 
     /* put in the data */
-    tmp->value = new;
+    tmp->val = new;
 
     /* Make next of new node as next of prev_node */
     tmp->next = prev_node->next;
@@ -102,7 +102,7 @@ void append(node** head, int new) {
     node* tmp = *head;
 
     /* put in the data */
-    new_node->value = new;
+    new_node->val = new;
 
     /* This new node is going to be the last node, so make next of it as NULL */
     new_node->next = NULL;
@@ -144,7 +144,7 @@ void pop(node** phead) {
 
 
 /* Given a head of a list, delete the last node in the list */ 
-void delete(node** head) {
+void deleteLinked(node** head) {
     // Check if head is NULL
     if (*head == NULL) {
         printf("The list is empty\n");
@@ -243,7 +243,7 @@ node find(node* head, int v) {
 
     /* loop through the list to the specified node or the null pointer*/
     while (temp != NULL) {
-        if (temp->value == v) {
+        if (temp->val == v) {
             found = true;
             return_node = *temp;
             return return_node;
@@ -252,7 +252,7 @@ node find(node* head, int v) {
     }
 
     /* if the specified node not found */
-    return_node.value = -1;
+    return_node.val = -1;
     return_node.next = NULL;
     return return_node;
 
@@ -348,13 +348,13 @@ int count_nodes_in_loop(node* list)
 
 /* Given a linked list, the job is to return a pointer to a reversed version of it */
 node* reverse(node* head) {
-    /* create a new pointer to node from the first value of list */
-    node* h = new_node(head->value);
+    /* create a new pointer to node from the first val of list */
+    node* h = new_node(head->val);
 
-    /* loop from the second value to the end adding a new node in the front at each step */
+    /* loop from the second val to the end adding a new node in the front at each step */
     node* temp = head->next;
     while (temp != NULL) {
-        push(&h, temp->value);
+        push(&h, temp->val);
         temp = temp->next;
     }
 
@@ -365,7 +365,7 @@ node* reverse(node* head) {
 bool equal_lists(node* list1, node* list2) {
     /* loop through the first list and see if its elements equal the second's */
     while(list1 != NULL && list2 != NULL) {
-        if (list1->value != list2->value) return false;
+        if (list1->val != list2->val) return false;
         list1 = list1->next;
         list2 = list2->next;
     }
@@ -386,23 +386,23 @@ bool is_palindrome(node* l) {
 
 /* returns a version of the sorted list without duplicates */
 node* remove_duplicates(node* head) {
-    /* integer variable to hold the current value */
-    int current = head->value;
+    /* integer variable to hold the current val */
+    int current = head->val;
 
     /* make a new list */
     node* result = malloc(sizeof(node));
-    result->value = head->value;
+    result->val = head->val;
     result->next = NULL;
 
     /* loop through the list */
     node* temp = head->next;
     while (temp != NULL) {
-        /* if the value is the same as current */
-        if(temp->value == current) {
+        /* if the val is the same as current */
+        if(temp->val == current) {
             temp = temp->next; // continue
-        } else { // else : there is a new value 
-            append(&result, temp->value); // add it and make it the current
-            current = temp->value;
+        } else { // else : there is a new val 
+            append(&result, temp->val); // add it and make it the current
+            current = temp->val;
             temp = temp->next;
         }
     }

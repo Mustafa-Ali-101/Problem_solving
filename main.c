@@ -4,93 +4,38 @@
 #include <math.h>
 #include <string.h>
 #include <ctype.h>
-#include "helper.h"
-
-typedef struct list_node {
-    int value;
-    struct list_node * next;
-} node;
-
-node* makeStack() {
-    node* result = NULL;
-    return result;
-}
-
-bool pushStack(node** head, int val) {
-    node* result = (node*) malloc(sizeof(node));
-    result->value = val;
-
-    result->next = (*head);
-
-    (*head) = result;
-
-    return true;
-}
-
-int popStack(node** head) {
-    int result = -1 ;
-    if (*head != NULL) {
-      result = (*head)->value;
-      (*head) = (*head)->next;
-    }
-    return result;
-}
-
-bool isEmptyStack(node* head) {
-  return head == NULL;
-}
-
-int calPoints(char** operations, int operationsSize);
-int main()
-{
-
-  char* game[] = {"5","2","C","D","+"};
-
-  int number = calPoints(game, 5);
+#include "hash_table.h"
 
 
-  printf("%d \n", number);
-  return 0;
-}
+bool binarySearch(int* list, int num) {
+  int l = 0;
+  int r = num - 1;
 
-int calPoints(char** operations, int operationsSize) {
+  while (l <= r) {
+    int mid = (r + l) / 2;
 
-  node* stack = makeStack();
-  int total = 0;
-
-  for (int i = 0; i < operationsSize; i++) {
-
-    if (strcmp(operations[i], "+") == 0) {
-
-      int one = popStack(&stack);
-      int two = popStack(&stack);
-
-      total += one + two;
-
-      pushStack(&stack, two);
-      pushStack(&stack, one);
-      pushStack(&stack, one + two);
-
-    } else if (strcmp(operations[i], "D") == 0) {
-
-      int one = popStack(&stack);
-
-      total += one * 2;
-
-      pushStack(&stack, one);
-      pushStack(&stack, one * 2);
-
-    } else if (strcmp(operations[i], "C") == 0) {
-
-      total -= popStack(&stack);
-
+    if (list [mid] == num) {
+      return true;
+    } else if (list[mid] < num) {
+      l = mid + 1;
     } else {
-
-      pushStack(&stack, atoi(operations[i]));
-      total += atoi(operations[i]);
-
+      r = mid - 2;
     }
   }
 
-  return total;
+  return false;
+}
+long main(void) {
+
+  HashTable* t = createHashTable(14);
+
+
+
+  for (int i = 0; i < 100; i++) {
+    if (i % 2 == 0) insert(t, i);
+  }
+
+  printHashTable(t);
+
+  return 0;
 }
