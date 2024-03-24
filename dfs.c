@@ -1,124 +1,116 @@
-#include <malloc.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <math.h>
 #include <string.h>
 #include <ctype.h>
+#include "queue.h"
 
 struct TreeNode {
     int val;
-    struct TreeNode* left;
-    struct TreeNode* right;
+    struct TreeNode *left;    
+    struct TreeNode *right;
 };
 
-void addPaths(struct TreeNode* root, char** solution, int* solIndex, char* path) {
-    if (root == NULL) {
-        return ;
-    } 
-    
-    // convert the node to string
-    // and add it to the buffer
-    char buffer[12];
-    sprintf(buffer, "%d", root->val);
+// Global Variables Needed
+int* modes;
+int modesIndex;
+int modeCount;
+int prev;
+int prevCount;
 
-    // add the string(node) to path
-    strcat(path, buffer);
-
-    // if node is the last
-    if (root->left == NULL && root->right == NULL) {
-        // allocate memory for path in solution
-        solution[(*solIndex)] = malloc(strlen(path) + 1);
-        // copy the path to the solution set
-        strcpy(solution[(*solIndex)], path);
-        (*solIndex)++;
-
-        return;
-    }
-
-    // not last node
-    // add the arrow
-    strcat(path, "->");
-
-    // after the call to the left
-    // this is helpful for that
-    int len = strlen(path);
-    // call the left node
-    addPaths(root->left, solution, solIndex, path);
-    // return the path as it was
-    path[len] = '\0';
-    // call the right node
-    addPaths(root->right, solution, solIndex, path);
-
-    return;
-}
-
-char** binaryTreePaths(struct TreeNode* root, int* returnSize) {
-    char** result = malloc(sizeof(char*) * 1000);
-    char* pathBuffer = malloc(1000);
-    pathBuffer[0] = '\0';
-
-    *returnSize = 0;
-
-
-
-    addPaths(root, result, returnSize, pathBuffer);
-
-    return result;
-}
-
-void sumRec(struct TreeNode* root, int *sum, bool isLeftChild) {
+// helper function make modes array using DFS
+void dfs_traversal(struct TreeNode* root) {
+    // Base Case
     if (root == NULL) return;
-    if (root->left == NULL && root->right == NULL && isLeftChild) {
-        (*sum) += root->val;
-        return;
+
+    // Recursive Call Left
+    dfs_traversal(root->left);
+
+    // Work At Hand
+    if (root->val == prev) {
+        prevCount++;
+    } else {
+        // Test For The Mode
+        if (prevCount > modeCount) {
+            modes[0] = prev;
+            modesIndex = 1;
+            modeCount = prevCount;
+        } else if (prevCount == modeCount) {
+            modes[modesIndex] = prev;
+            modesIndex++;
+        }
+
+        // Reset
+        prev = root->val;
+        prevCount = 1;
     }
-    
-    sumRec(root->left, sum, true);
-    sumRec(root->right, sum, false);
-    return;
+
+
+    // Recursive Call Right
+    dfs_traversal(root->right);
 }
 
-// Sum of Left Leaves
-int sumOfLeftLeaves(struct TreeNode* root) {
-    int result = 0;
+int* findMode(struct TreeNode* root, int* returnSize) {
+    // Set All Varailbles And Arrays
+    modes = malloc(sizeof(int) * 10000);
+    modesIndex = 0;
+    modeCount = 0;
+    prev = INT_MAX;
+    prevCount = INT_MIN;
 
-    // call Recursive
-    sumRec(root, &result, false);
+    dfs_traversal(root);
 
-    return result;
+    // Test For The Mode
+    if (prevCount > modeCount) {
+        modes[0] = prev;
+        modesIndex = 1;
+        modeCount = prevCount;
+    } else if (prevCount == modeCount) {
+        modes[modesIndex] = prev;
+        modesIndex++;
+    }
+
+    // Realloc the result and Return
+    modes = realloc(modes, sizeof(int) * modesIndex);
+    (*returnSize) = modesIndex;
+    return modes;
 }
-
-
-
 
 int main (void) {
-    struct TreeNode* myTreeOne = malloc(sizeof(struct TreeNode));
-    struct TreeNode* myTreeTwo = malloc(sizeof(struct TreeNode));
-    struct TreeNode* myTreeThree = malloc(sizeof(struct TreeNode));
-    struct TreeNode* myTreeFour = malloc(sizeof(struct TreeNode));
-    struct TreeNode* myTreeFive = malloc(sizeof(struct TreeNode));
+    struct TreeNode* one1 = malloc(sizeof(struct TreeNode));
+    struct TreeNode* two2 = malloc(sizeof(struct TreeNode));
+    struct TreeNode* three3 = malloc(sizeof(struct TreeNode));
+    struct TreeNode* four4 = malloc(sizeof(struct TreeNode));
+    struct TreeNode* five5 = malloc(sizeof(struct TreeNode));
 
-    myTreeOne->val = 1;
-    myTreeOne->left = myTreeTwo;
-    myTreeOne->right = myTreeFive;
+    one1->val = 4;
+    one1->left = two2;
+    one1->right = five5;
 
-    myTreeTwo->val = 2;
-    myTreeTwo->left = myTreeThree;
-    myTreeTwo->right = myTreeFour;
+    two2->val = 2;
+    two2->left = three3;
+    two2->right = four4;
 
-    myTreeThree->val = 3;
-    myTreeThree->left = NULL;
-    myTreeThree->right = NULL;
+    three3->val = 2;
+    three3->left = NULL;
+    three3->right = NULL;
 
-    myTreeFour->val = 4;
-    myTreeFour->left = NULL;
-    myTreeFour->right = NULL;
+    four4->val = 3;
+    four4->left = NULL;
+    four4->right = NULL;
 
-    myTreeFive->val = 5;
-    myTreeFive->left = NULL;
-    myTreeFive->right = NULL;
+    five5->val = 4;
+    five5->left = NULL;
+    five5->right = NULL;
 
 
-    
+    int size;
+    int* result = findMode(one1, &size);
+
+
+    for (int i = 0; i < size; i++) {
+        printf("%d ", result[i]);
+    }
+
+    return 0;
 }

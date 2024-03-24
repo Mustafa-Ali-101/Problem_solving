@@ -53,14 +53,11 @@ int search(HashTable* hashTable, int value) {
     
     while (entry != NULL) {
         if (entry->value == value) {
-            // return the index
-            return entry->value;
+            return value;
         }
         entry = entry->next;
     }
     
-    // If not found, return -1
-    // valid because there isn't a negative index
     return INT_MIN;
 }
 
