@@ -56,8 +56,3 @@ int minimum(int x, int y) {
     if (x < y) return x;
     return y;
 }
-
-// used by qsort as a compare function
-int cmpfunc(const void *a, const void *b) {
-  return (*(int *)a - *(int *)b);
-}

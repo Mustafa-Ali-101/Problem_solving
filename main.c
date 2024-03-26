@@ -84,7 +84,7 @@ int** threeSum(int* nums, int numsSize, int* returnSize, int** returnColumnSizes
   int returnIndex = 0;
 
   // 1 - Sort the Array
-  qsort(nums, numsSize, sizeof(int), cmpfunc);
+  qsort(nums, numsSize, sizeof(int), compare);
 
   // 2 - Loop over Every unique Number
   for (int i = 0; i < numsSize; i++) {
@@ -119,48 +119,45 @@ int** threeSum(int* nums, int numsSize, int* returnSize, int** returnColumnSizes
   return result;  
 }
 
-int prev = INT_MIN;
-bool modified = false;
-// Recursion
-bool validateBST(struct TreeNode* root) {
-    // Base Case
-  if (root == NULL) {
-    return true;
+int threeSumClosest(int* nums, int numsSize, int target) {
+  // All Variables Needed
+  unsigned closest = INT_MAX;
+
+  // sort
+  qsort(nums, numsSize, sizeof(int), compare);
+
+  // outer loop
+  for (int i = 0; i < numsSize - 2; i++) {
+    // eliminate duplicates
+    if (i > 0 && nums[i] == nums[i - 1]) continue;
+
+    // two pointers
+    int left = i + 1;
+    int right = numsSize - 1;
+    int sum = 0;
+    while (left < right)
+    {
+      sum = nums[i] + nums[left] + nums[right];
+
+      // change closest
+      if (abs(sum - target) < closest) {
+        closest = abs(sum);
+      }
+
+      // update two pointers
+      do {left++;} while (left > 0 && nums[left] == nums[left - 1]);
+      do {right--;} while (right < numsSize - 1 && nums[right] == nums[right + 1]);
+    }
+    
   }
 
-  // Left Child
-  bool left = validateBST(root->left);
-  if (!left) {
-    return false;
-  }
-
-  // Current Node
-  if (!modified) {
-    prev = root->val;
-    modified = true;
-  } else if (root->val > prev) {
-    prev = root->val;
-  } else {
-    return false;
-  }
-
-  // Right Child
-  return validateBST(root->right);
-}
-bool isValidBST(struct TreeNode* root) {
-  prev = INT_MIN;
-  modified = false;
-  return validateBST(root);
+  return closest;
 }
 // Main For Test
 int main(void) {
 
-  struct TreeNode* myNode = malloc(sizeof(struct TreeNode));
+  int arr[] = {-1,2,1,-4};
 
-  myNode->val = 0;
-  myNode->left = NULL;
-  myNode->right = NULL;
-
-  printf("%d\n", isValidBST(myNode));
+  printf("%d\n", threeSumClosest(arr, 4, 1));
   return 0;
 }
