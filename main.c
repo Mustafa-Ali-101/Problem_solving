@@ -12,6 +12,12 @@ struct ListNode {
     struct ListNode *next;
 };
 
+struct TreeNode {
+  int val;
+  struct TreeNode *left;
+  struct TreeNode *right;
+};
+
 bool binarySearch(int* list, int num) {
   int l = 0;
   int r = num - 1;
@@ -113,22 +119,48 @@ int** threeSum(int* nums, int numsSize, int* returnSize, int** returnColumnSizes
   return result;  
 }
 
+int prev = INT_MIN;
+bool modified = false;
 // Recursion
-struct ListNode* swapPairs(struct ListNode* head) {
-  // Base Case
-  if (head == NULL) return NULL;
-  if (head->next == NULL) return head;
+bool validateBST(struct TreeNode* root) {
+    // Base Case
+  if (root == NULL) {
+    return true;
+  }
 
-  // Recursive Case
-  struct ListNode* temp = head->next;
-  head->next = swapPairs(temp->next);
-  temp->next = head;
-  
-  return temp;
+  // Left Child
+  bool left = validateBST(root->left);
+  if (!left) {
+    return false;
+  }
+
+  // Current Node
+  if (!modified) {
+    prev = root->val;
+    modified = true;
+  } else if (root->val > prev) {
+    prev = root->val;
+  } else {
+    return false;
+  }
+
+  // Right Child
+  return validateBST(root->right);
+}
+bool isValidBST(struct TreeNode* root) {
+  prev = INT_MIN;
+  modified = false;
+  return validateBST(root);
 }
 // Main For Test
 int main(void) {
 
+  struct TreeNode* myNode = malloc(sizeof(struct TreeNode));
 
+  myNode->val = 0;
+  myNode->left = NULL;
+  myNode->right = NULL;
+
+  printf("%d\n", isValidBST(myNode));
   return 0;
 }
