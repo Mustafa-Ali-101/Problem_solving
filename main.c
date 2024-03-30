@@ -23,7 +23,7 @@ bool binarySearch(int* list, int num) {
   int r = num - 1;
 
   while (l <= r) {
-    int mid = (r + l) / 2;
+    int mid = l + (r - l) / 2;
 
     if (list [mid] == num) {
       return true;
@@ -152,6 +152,75 @@ int threeSumClosest(int* nums, int numsSize, int target) {
   }
 
   return closest;
+}
+
+
+int** fourSum(int* nums, int numsSize, int target, int* returnSize, int** returnColumnSizes) {
+  (*returnSize) = 0;
+
+  // Calculate the maximum possible number of quadruplets
+  int maxQuadruplets = numsSize * (numsSize - 1) * (numsSize - 2) * (numsSize - 3) / 24; // 4!
+
+  int** result = (int**)malloc(sizeof(int*) * maxQuadruplets);
+  if (!result) {
+      // Handle memory allocation failure
+      return NULL;
+  }
+
+  // Sort
+  qsort(nums, numsSize, sizeof(int), compare);
+
+  // Outer loop
+  for (int i = 0; i < numsSize - 3; i++) {
+    // Skip Duplicates
+    if (i > 0 && nums[i] == nums[i - 1]) continue;
+
+    // ThreeSum
+    int three = target - nums[i];
+    for (int j = i + 1; j < numsSize - 2; j++) { // Changed
+      // Skip Duplicates
+      if (j > i + 1 && nums[j] == nums[j - 1]) continue;
+
+      // TwoSum
+      long long two = (long long)three - nums[j];
+      int left = j + 1;
+      int right = numsSize - 1;
+      while (left < right)
+      {
+        // Sum
+        long long sum = (long long)nums[left] + nums[right];
+
+        if (sum < two) {
+          do {left++;} while (left < right && nums[left] == nums[left - 1]);
+        } else if (sum > two) {
+          do {right--;} while (left < right && nums[right] == nums[right - 1]);
+        } else {
+          // found a match
+          int* someResult =(int*) malloc(sizeof(int) * 4);
+          someResult[0] = nums[i];
+          someResult[1] = nums[j];
+          someResult[2] = nums[left];
+          someResult[3] = nums[right];
+
+          // add to result
+          result[(*returnSize)] = someResult;
+          (*returnSize)++;
+
+          do {left++;} while (left < right && nums[left] == nums[left - 1]);
+          do {right--;} while (left < right && nums[right] == nums[right + 1]);
+        }
+      }
+      
+    }
+  }
+
+  int* colums = (int*) malloc(sizeof(int) * (*returnSize));
+  for (int i = 0; i < (*returnSize); i++) {
+    colums[i] = 4;
+  }
+  (*returnColumnSizes) = colums;
+
+  return result;
 }
 // Main For Test
 int main(void) {

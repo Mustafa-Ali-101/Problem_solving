@@ -8,7 +8,7 @@
 #include "helper.h"
 
 int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
-    qsort(nums, numsSize, sizeof(int), cmpfunc);
+    qsort(nums, numsSize, sizeof(int), compare);
 
     int * result = malloc(sizeof(int) * 2);
     (*returnSize) = 2;
@@ -37,7 +37,7 @@ int** threeSum(int* nums, int numsSize, int* returnSize, int** returnColumnSizes
         return NULL;
     }
 
-    qsort(nums, numsSize, sizeof(int), cmpfunc); // Sort the array first
+    qsort(nums, numsSize, sizeof(int), compare); // Sort the array first
 
     int** result = (int**)malloc(sizeof(int*) * (numsSize * numsSize));
     *returnSize = 0;
