@@ -36,6 +36,11 @@ int compare(const void* a, const void* b) {
   return (*(int*)a - *(int*)b);
 }
 
+// Custom comparison function for descending order
+int compare_desc(const void *a, const void *b) {
+    return (*(int *)b - *(int *)a);
+}
+
 // compute the Average of an array
 double average(int* nums, int numsSize) {
   double avg = 0;
