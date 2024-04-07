@@ -18,74 +18,77 @@ struct TreeNode {
   struct TreeNode *right;
 };
 
-void nextPermutation(int* nums, int numsSize) {
-  // Variables
-  int lastPeakIndex = -1;
-  int replacedIndex = -1;
-
-  // Set vars
-  for (int i = 1; i < numsSize; i++) {
-    if (nums[i] > nums[i - 1]) lastPeakIndex = i;
-  }
-  // Test for No Next Permutation
-  if (lastPeakIndex == -1) {
-    qsort(nums, numsSize, sizeof(int), compare);
-    return;
-  }
-  replacedIndex = lastPeakIndex - 1;
-  // Modify lastPeakIndex if needed
-  for (int i = lastPeakIndex + 1; i < numsSize; i++) {
-    if (nums[i] > nums[replacedIndex] && nums[i] < nums[lastPeakIndex]) lastPeakIndex = i;
-  }
-
-  // Swap
-  int temp = nums[replacedIndex];
-  nums[replacedIndex] = nums[lastPeakIndex];
-  nums[lastPeakIndex] = temp;
-
-  // sort
-  int* sortArray = nums + replacedIndex + 1;
-  qsort(sortArray, numsSize - (replacedIndex + 1), sizeof(int), compare);
-
-  return;
-}
-
-
-int search(int* nums, int numsSize, int target) {
+int* searchRange(int* nums, int numsSize, int target, int* returnSize) {
   int left = 0;
   int right = numsSize - 1;
+  (*returnSize) = 2;
+  int* returnArray = (int*) malloc(sizeof(int) * (*returnSize));
+  returnArray[0] = -1;
+  returnArray[1] = -1;
 
-  while (left <= right) {
-    int mid = left + (right - left) / 2;
-    if (nums[mid] == target) return mid;
+  while (left <= right)
+  {
+    int mid = left + ((right - left) / 2);
+    if (nums[mid] > target) {
+      right = mid - 1;
+    } else if (nums[mid] < target) {
+      left = mid + 1;
+    } else {
+      returnArray[0] = mid;
+      returnArray[1] = mid;
 
-    // Left Subarray
-    if (nums[mid] >= nums[left]) {
-      if (target > nums[mid] || target < nums[left]) {
-          left = mid + 1;
-      } else {
-          right = mid - 1;
+      // Search Right Array
+      int l = mid + 1;
+      int r = right;
+      while (l <= r)
+      {
+        int m = l + ((r - l) / 2);
+        if (nums[m] > target) {
+          r = m - 1;
+        } else {
+          returnArray[1] = m;
+          l = m + 1;
+        }
       }
-    }
-    // Right Subarray 
-    else {
-      if (target < nums[mid] || target > nums[right]) {
-        right = mid - 1;
-      } else {
-        left = mid + 1;  
+      
+      // Search Left Array
+      l = left;
+      r = mid - 1;
+      while (l <= r)
+      {
+        int m = l + ((r - l) / 2);
+        if (nums[m] < target) {
+          l = m + 1;
+        } else {
+          returnArray[0] = m;
+          r = m - 1;
+        }
       }
-    }
 
+      break;;
+    }
+      
   }
 
-  return -1;
+  return returnArray;
 }
+
+
+bool isValidSudoku(char** board, int boardSize, int* boardColSize) {
+    
+}
+
+
 // Main For Test
 int main(void) {
 
-  int arr[] = {5,1,3};
-  int size = 3;
+  int arr[] = {5,7,7,8,8,10};
+  int size = 6;
 
-  printf("%d \n", search(arr, size, 3));
+  int s;
+  int* r = searchRange(arr, size, 8, &s);
+
+  printf("%d ", r[0]);
+  printf("%d ", r[1]);
   return 0;
 }
