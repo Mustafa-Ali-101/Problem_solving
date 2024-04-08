@@ -7,20 +7,6 @@
 #include "hash_table.h"
 #include "helper.h"
 
-// Define the size of the Sudoku board (9x9)
-#define BOARD_SIZE 9
-
-struct ListNode {
-    int val;
-    struct ListNode *next;
-};
-
-struct TreeNode {
-  int val;
-  struct TreeNode *left;
-  struct TreeNode *right;
-};
-
 bool isValidSudoku(char** board, int boardSize, int* boardColSize) {
     // Define hash tables for rows, columns, and boxes
     HashTable* rows[9];
@@ -65,8 +51,7 @@ bool isValidSudoku(char** board, int boardSize, int* boardColSize) {
     return true;
 }
 
-// Main For Test
-int main(void) {
 
-  return 0;
+int main(void) {
+    return 0;
 }
