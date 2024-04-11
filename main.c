@@ -5,21 +5,15 @@
 #include <string.h>
 #include <ctype.h>
 #include "hash_table.h"
+#include "queue_tree_node.h"
 #include "helper.h"
 
-// Define the size of the Sudoku board (9x9)
-#define BOARD_SIZE 9
 
 struct ListNode {
     int val;
     struct ListNode *next;
 };
 
-struct TreeNode {
-  int val;
-  struct TreeNode *left;
-  struct TreeNode *right;
-};
 
 bool isValidSudoku(char** board, int boardSize, int* boardColSize) {
     // Define hash tables for rows, columns, and boxes
@@ -65,8 +59,62 @@ bool isValidSudoku(char** board, int boardSize, int* boardColSize) {
     return true;
 }
 
+
+int** levelOrder(struct TreeNode* root, int* returnSize, int** returnColumnSizes) {
+  // Empty Tree
+  if (root == NULL) {
+    (*returnSize) = 0;
+    return NULL;
+  }
+  // Variables
+  int** arrayOfArrays = malloc(sizeof(int*) * 2000);
+  int* columnSizes = malloc(sizeof(int) * 2000);
+  int index = 0;
+  int columnIndex = 0; // Has to Be Reset
+  int levelIndicator = 1; // Initial Value Is 1
+  queue* q = makeQueue();
+  enqueue(q, root);
+
+  // While The Next Level Is Not Empty
+  while (levelIndicator > 0) {
+    int nextNumOfChildren = 0;
+    int* ithArray = malloc(sizeof(int) * levelIndicator);
+    columnIndex = 0;
+    arrayOfArrays[index] = ithArray;
+    columnSizes[index] = levelIndicator;
+    index++;
+
+    // dequeue all nodes for that level
+    for (int i = 0; i < levelIndicator; i++) {
+      struct TreeNode* n = dequeue(q);
+      if (n -> left != NULL) {
+        nextNumOfChildren++;
+        enqueue(q, n->left);
+      }
+      if (n -> right != NULL) {
+        nextNumOfChildren++;
+        enqueue(q, n->right);
+      }
+
+      ithArray[columnIndex] = n->val;
+      columnIndex++;
+    }
+
+    levelIndicator = nextNumOfChildren;
+  }
+
+  (*returnSize) = index;
+  (*returnColumnSizes) = columnSizes;
+  return arrayOfArrays;
+}
 // Main For Test
 int main(void) {
 
+  struct TreeNode* one = malloc(sizeof(struct TreeNode));
+  struct TreeNode* two = malloc(sizeof(struct TreeNode));
+  struct TreeNode* three = malloc(sizeof(struct TreeNode));
+
+  one->val = 1;
+  one->left = two;
   return 0;
 }
