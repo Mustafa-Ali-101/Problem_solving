@@ -8,55 +8,6 @@
 #include "queue_tree_node.h"
 #include "helper.h"
 
-
-struct ListNode {
-    int val;
-    struct ListNode *next;
-};
-
-struct ListNode* makeLinkedList() {
-  return NULL;
-}
-
-// Add a new value to the Linked List
-void addToLinkedList(int value, struct ListNode** list) {
-  struct ListNode* newNode = malloc(sizeof(struct ListNode));
-  newNode->val = value;
-  newNode->next = NULL;
-  if ((*list) == NULL) {
-    (*list) = newNode;
-  } else {
-    newNode->next = (*list);
-    (*list) = newNode;
-  }
-}
-
-// Search the Linked list for a value
-bool isInLinkedList(int val, struct ListNode* list) {
-  struct ListNode* temp = list;
-  while (temp != NULL) {
-    if (temp->val == val) return true;
-    temp = temp->next;
-  }
-
-  return false;
-}
-
-// make a new linked list
-struct ListNode* copyLinkedList(struct ListNode* old) {
-  // Base Case
-  if (old == NULL) {
-    return NULL;
-  } else {
-    struct ListNode* newNode = malloc(sizeof(struct ListNode));
-    newNode->val = old->val;
-    newNode->next = copyLinkedList(old->next);
-
-    return newNode;
-  }
-}
-
-
 // Not Needed in this Scinario
 bool isASolution(int* v, int k, int target) {
   int sum = 0;
@@ -66,16 +17,12 @@ bool isASolution(int* v, int k, int target) {
   return sum == target;
 }
 
-
-
 // Modified
-void constructCandidates(int** nc, int* n, int* cand, int candSize, struct ListNode** listOfSearched,
- int sum, int target) {
+void constructCandidates(int** nc, int* n, int* cand, int candSize, HashTable* hashSet, int target) {
   int* candidates = malloc(sizeof(int) * candSize);
   int index = 0;
   for (int j = 0; j < candSize; j++) {
-
-    if (!isInLinkedList(cand[j], (*listOfSearched)) && (sum + cand[j]) <= target) {candidates[index] = cand[j]; index++;}
+    if ((j <= 0 || cand[j] != cand[j - 1]) && search(hashSet, cand[j]) != cand[j] && target >= cand[j]) {candidates[index] = cand[j]; index++;}
   }
 
 
@@ -83,7 +30,6 @@ void constructCandidates(int** nc, int* n, int* cand, int candSize, struct ListN
   (*n) = index;
   return;
 }
-
 
 void processSolution(int* v, int k, int** sols, int* columnSizes, int* index) {
   int* s = malloc(sizeof(int) * (k + 1));
@@ -97,27 +43,26 @@ void processSolution(int* v, int k, int** sols, int* columnSizes, int* index) {
   return;
 }
 
-
 void backtrack(int* v, int k, int target, int* cand, int candSize, int** sol, int* columnSizes, int* index,
-              struct ListNode** listOfSearched) {
+              HashTable* hashSet) {
   // Base Case
-  int sum = 0;
-  for (int i = 0; i <= k; i++) {
-    sum += v[i];
-  }
-  if (sum == target) { // isASolution
+  if (target == 0) { // isASolution
     processSolution(v, k, sol, columnSizes, index);
   } else {
-    k = k + 1;
     int* candidates;
     int candLength;
-    constructCandidates(&candidates, &candLength, cand, candSize, listOfSearched, sum, target);
-
-    struct ListNode* alreadySearched = copyLinkedList((*listOfSearched));
+    constructCandidates(&candidates, &candLength, cand, candSize, hashSet, target);
+    
+    k = k + 1;
+    //struct ListNode* alreadySearched = copyLinkedList((*listOfSearched));
     for (int i = 0; i < candLength; i++) {
       v[k] = candidates[i];
-      backtrack(v, k, target, cand, candSize, sol, columnSizes, index, &alreadySearched);
-      addToLinkedList(candidates[i], &alreadySearched);
+      backtrack(v, k, target - candidates[i], cand, candSize, sol, columnSizes, index, hashSet);
+      insert(hashSet, candidates[i]);
+    }
+    // Add remove Here
+    for (int i = 0; i < candLength; i++) {
+      delete(hashSet, candidates[i]);
     }
     // Free Memory
     free(candidates);
@@ -126,12 +71,17 @@ void backtrack(int* v, int k, int target, int* cand, int candSize, int** sol, in
 }
 
 int** combinationSum(int* candidates, int candidatesSize, int target, int* returnSize, int** returnColumnSizes) {
+  qsort(candidates, candidatesSize, sizeof(candidates[0]), compare);
+
   int** solutions = malloc(sizeof(int*) * 150);
   int* columnSizes = malloc(sizeof(int) * 150);
   int index = 0;
   int* vector = malloc(sizeof(int) * target);
-  struct ListNode* alreadySearched = makeLinkedList();
-  backtrack(vector, -1, target, candidates, candidatesSize, solutions, columnSizes, &index, &alreadySearched);
+  HashTable* hashSet = createHashTable(candidatesSize);
+
+  backtrack(vector, -1, target, candidates, candidatesSize, solutions, columnSizes, &index, hashSet);
+
+  freeHashTable(hashSet);
 
   (*returnSize) = index;
   (*returnColumnSizes) = columnSizes;

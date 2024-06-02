@@ -61,6 +61,34 @@ int search(HashTable* hashTable, int value) {
     return INT_MIN;
 }
 
+bool delete(HashTable* hashTable, int value) {
+    int bucket = hashCode(hashTable, value);
+    HashTableEntry* entry = hashTable->table[bucket];
+
+    if (entry->value == value) {
+        hashTable->table[bucket] = entry->next;
+        return true;
+    }
+
+    HashTableEntry* prev = entry;
+    entry = entry->next;
+
+    while (entry != NULL)
+    {
+        if (entry->value == value) {
+            prev->next = entry->next;
+            return true;
+        }
+
+        entry = entry->next;
+        prev = prev->next;
+    }
+
+    
+    return false;
+}
+
+
 // Function to create a new hash table
 HashTable* createHashTable(int size) {
     HashTable* hashTable = (HashTable*) malloc(sizeof(HashTable));
