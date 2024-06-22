@@ -12,12 +12,12 @@ typedef struct list_node {
 
 node * make_list(int * a, int l) {
     node * head;
-    head = malloc(sizeof(node));
+    head = (node*) malloc(sizeof(node));
     int i;
     node * temp = head;
     for (i = 0; i < l - 1; i++) {
         temp->val = a[i];
-        temp->next = malloc(sizeof(node));
+        temp->next = (node*) malloc(sizeof(node));
         temp = temp->next;
     }
     temp->val = a[i];
@@ -44,7 +44,7 @@ void print_list (node * head) {
 /* function to make a new node */
 node* new_node(int v) {
     /* malloc a new node */
-    node* n = malloc(sizeof(node));
+    node* n = (node*) malloc(sizeof(node));
 
     /* set the val and next */
     n->val = v;
@@ -56,12 +56,12 @@ node* new_node(int v) {
 
 
 /* Given a reference (pointer to pointer) to the head of a list and an int, inserts a new node on the front of the list. */
-void push(node ** head, int new) {
+void push(node ** head, int newNode) {
     /* allocate node */
-    node * tmp = malloc(sizeof(node));
+    node * tmp = (node*) malloc(sizeof(node));
 
     /* put in the data  */
-    tmp->val = new;
+    tmp->val = newNode;
 
     /* Make next of new node as head */
     tmp->next = *head;
@@ -72,7 +72,7 @@ void push(node ** head, int new) {
 
 
 /* Given a node prev_node, insert a new node after the given prev_node */
-void insert_after(node* prev_node, int new) {
+void insert_after(node* prev_node, int newNode) {
     /* check if the given prev_node is NULL */
     if (prev_node == NULL) {
         printf("the given previous node cannot be NULL");
@@ -80,10 +80,10 @@ void insert_after(node* prev_node, int new) {
     }
 
     /* allocate new node */
-    node* tmp = malloc(sizeof(node));
+    node* tmp =(node*)  malloc(sizeof(node));
 
     /* put in the data */
-    tmp->val = new;
+    tmp->val = newNode;
 
     /* Make next of new node as next of prev_node */
     tmp->next = prev_node->next;
@@ -94,15 +94,15 @@ void insert_after(node* prev_node, int new) {
 
 
 /* Given a reference (pointer to pointer) to the head of a list and an int, appends a new node at the end */
-void append(node** head, int new) {
+void append(node** head, int newNode) {
     /* allocate node */
-    node* new_node = malloc(sizeof(node));
+    node* new_node =(node*)  malloc(sizeof(node));
 
     /* temperary pointer to node */
     node* tmp = *head;
 
     /* put in the data */
-    new_node->val = new;
+    new_node->val = newNode;
 
     /* This new node is going to be the last node, so make next of it as NULL */
     new_node->next = NULL;
@@ -390,7 +390,7 @@ node* remove_duplicates(node* head) {
     int current = head->val;
 
     /* make a new list */
-    node* result = malloc(sizeof(node));
+    node* result = (node*) malloc(sizeof(node));
     result->val = head->val;
     result->next = NULL;
 
