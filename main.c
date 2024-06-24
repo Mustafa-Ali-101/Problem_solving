@@ -8,6 +8,9 @@
 #include "queue_tree_node.h"
 #include "helper.h"
 
+bool canJump(int* nums, int numsSize) {
+    
+}
 
 struct ListNode {
     int val;
