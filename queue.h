@@ -15,7 +15,7 @@ typedef struct q {
     qNode* tail;
 } queue;
 
-queue* makeQueue() {
+queue* createQueue() {
     queue* q = malloc(sizeof(queue));
 
     // Memory Allocation failed

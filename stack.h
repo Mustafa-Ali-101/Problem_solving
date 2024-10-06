@@ -7,20 +7,20 @@
 
 typedef struct stackNode {
     int val;
-    int*next;
-}stackNode;
+    struct stackNode *next;
+} StackNode;
 
 
-stackNode* makeStack() {
-    stackNode* stack = NULL;
+StackNode* createStack() {
+    StackNode* stack = NULL;
     return stack;
 }
 
-bool pushStack (stackNode** stack, int val) {
-    stackNode* newNode = malloc(sizeof(stackNode));
+bool push (StackNode** stack, int val) {
+    StackNode* newNode = (StackNode*) malloc(sizeof(StackNode));
 
     if (newNode == NULL) {
-        printf("Memory Allocation Failed");
+        printf("Memory Allocation Failed\n");
         return false;
     }
 
@@ -31,14 +31,14 @@ bool pushStack (stackNode** stack, int val) {
 }
 
 
-bool isEmptyStack(stackNode* stack) {
+bool isEmptyStack(StackNode* stack) {
     return stack == NULL;
 }
 
-int popStack(stackNode** stack) {
-    if (isEmptyStack(stack)) {
-        printf("Couldn't Pop An Empty Stack");
-        return -404;
+int pop(StackNode** stack) {
+    if (isEmptyStack(*stack)) {
+        printf("Couldn't Pop An Empty Stack\n");
+        return INT_MIN;
     } else {
         int poped = (*stack)->val;
         (*stack) = (*stack)->next;
