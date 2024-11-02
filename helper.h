@@ -41,6 +41,11 @@ int compare_desc(const void *a, const void *b) {
     return (*(int *)b - *(int *)a);
 }
 
+// Custom Comparison function for characters
+int compareChars(const void *a, const void *b) {
+    return *(const char *)a - *(const char *)b;
+}
+
 // compute the Average of an array
 double average(int* nums, int numsSize) {
   double avg = 0;
